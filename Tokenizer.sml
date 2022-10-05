@@ -1,11 +1,9 @@
-structure tokenizer = struct
+structure Tokenizer = struct
 
-  open infra;
+  open Infra;
 
   datatype token = TOK ;
 
   fun tokenize (s:string list) : token list = raise NOT_IMPLEMENTED;
-
-  fun main () = ();
 
 end

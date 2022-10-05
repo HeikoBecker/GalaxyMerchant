@@ -1,3 +1,3 @@
-PolyML.make "tokenizer";
+PolyML.make "Tokenizer";
 
 fun main () = print "Test";

@@ -1,4 +1,4 @@
-structure infra = struct
+structure Infra = struct
 
   exception NOT_IMPLEMENTED;
 
