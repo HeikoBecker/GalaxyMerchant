@@ -4,6 +4,7 @@ structure Tokenizer = struct
 
   datatype token = TOK ;
 
-  fun tokenize (s:string list) : token list = raise NOT_IMPLEMENTED;
+  fun tokenize (s:string list) : token list =
+    if s = [] then [] else raise NOT_IMPLEMENTED;
 
 end
