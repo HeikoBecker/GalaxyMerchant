@@ -30,3 +30,6 @@ jobs:
 
       - name: Build
         run: cd $GITHUB_WORKSPACE && ./scripts/build.sh
+
+      - name: Test
+        run: cd $GITHUB_WORKSPACE && ./scripts/test.sh
