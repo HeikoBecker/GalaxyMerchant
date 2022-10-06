@@ -8,19 +8,53 @@ structure Parser = struct
   datatype number =
     I | V | X | L | C | D | M;
 
-  datatype token = Num of number;
+  datatype token =
+    Num of number
+    | Assign
+    | Gold
+    | Silver
+    | Iron
+    | Credits
+    | Name of string
+    | End
+    | Sum
+    | Convert
+
+  fun consume (elem:''a) (ss:''a list) =
+    case ss of [] => raise NotFound
+    | x::ss2 => if elem = x then ss2 else raise NotFound;
+
+  fun peek (ss: 'a list) :'a =
+  case ss of [] => raise NotFound | n :: ss2 => n;
 
   fun tokenize (ss:string list) : token list =
     case ss of
     [] => []
-    | "I" :: ss2 => Num I :: tokenize ss2
-    | "V" :: ss2 => Num V :: tokenize ss2
-    | "X" :: ss2 => Num X :: tokenize ss2
-    | "L" :: ss2 => Num L :: tokenize ss2
-    | "C" :: ss2 => Num C :: tokenize ss2
-    | "D" :: ss2 => Num D :: tokenize ss2
-    | "M" :: ss2 => Num M :: tokenize ss2
-    | _ => raise NOT_IMPLEMENTED;
+    | tok :: ss2 =>
+      if tok = "how" then
+        if peek ss2 = "much" then
+          let val ss3 = consume "much" ss2
+              val ss4 = consume "is" ss3
+          in Sum :: tokenize ss4 end
+        else
+          let val ss3 = consume "many" ss2
+          in Convert :: tokenize ss3 end
+      else
+      (case tok of
+       "I" => Num I
+      | "V" => Num V
+      | "X" => Num X
+      | "L" => Num L
+      | "C" => Num C
+      | "D" => Num D
+      | "M" => Num M
+      | "Gold" => Gold
+      | "Silver" => Silver
+      | "Iron" => Iron
+      | "Credits" => Credits
+      | "?" => End
+      | "is" => Assign
+      | _ => Name tok) :: tokenize ss2;
 
   fun valOf (n : number): int =
     case n of
@@ -29,18 +63,15 @@ structure Parser = struct
 
   (** consume a symbol,
       returns the number of consumed elements and the remaining list **)
-  fun consume (n:number) (ns: number list) : int * number list =
-  let fun consume_acc (n:number) (ns:number list) (nocc:int) : int * number list =
+  fun consumeNum (n:number) (ns: number list) : int * number list =
+  let fun consumeNum_acc (n:number) (ns:number list) (nocc:int) : int * number list =
     case ns of
      [] => (nocc, ns)
-     | n1 :: ns2 => if n = n1 then consume_acc n ns2 (nocc + 1)
+     | n1 :: ns2 => if n = n1 then consumeNum_acc n ns2 (nocc + 1)
                     else (nocc, ns)
   in
-    consume_acc n ns 0
+    consumeNum_acc n ns 0
   end
-
-  fun peek (ns:number list) :number =
-  case ns of [] => raise NotFound | n :: ns2 => n
 
   local
     (* shouldSubtract returns true if the operation must be a subtraction *)
@@ -62,7 +93,7 @@ structure Parser = struct
       | _ => let
         (* take top element and count number of occurences *)
         val hdElem = peek nums
-        val (nocc, nums2) = consume hdElem nums
+        val (nocc, nums2) = consumeNum hdElem nums
         in
         if nums2 = [] then (* corner case: empty remainder list *)
           (* if we have a valid number of occurences: sum *)
@@ -76,7 +107,7 @@ structure Parser = struct
           if shouldSubtract hdElem next then
             (* validate subtraction step *)
             if nocc = 1 andalso validSubtract hdElem next then
-              let val (nocc_sub, nums3) = consume next nums2 in
+              let val (nocc_sub, nums3) = consumeNum next nums2 in
                 (* rule out corner cases like I X X which are not allowed *)
                 if nocc_sub = 1 then (valOf next - valOf hdElem) + sum nums3
                 else raise IllegalFormat
