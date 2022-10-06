@@ -1,4 +1,4 @@
-PolyML.make "../Tokenizer";
+PolyML.make "../Parser";
 PolyML.make "UnitTests";
 
 fun main () =

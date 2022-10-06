@@ -2,6 +2,6 @@ structure Infra = struct
 
   exception NOT_IMPLEMENTED;
 
-  fun failure() = OS.Process.terminate OS.Process.failure;
+  fun failure s = (print (s^"\n"); OS.Process.terminate OS.Process.failure)
 
 end
