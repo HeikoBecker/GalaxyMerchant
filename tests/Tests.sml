@@ -5,7 +5,9 @@ PolyML.make "TestUtils";
 
 PolyML.make "ParserUnitTests";
 PolyML.make "EvalUnitTests";
-
+PolyML.make "EvalIntegrationTests";
 
 fun main () =
-  (ParserUnitTests.test(); EvalUnitTests.test());
+  (ParserUnitTests.test();
+   EvalUnitTests.test();
+   EvalIntegrationTests.test());
