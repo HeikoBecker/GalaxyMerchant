@@ -29,7 +29,7 @@ structure Parser = struct
   case ss of [] => raise NotFound | n :: ss2 => n;
 
   fun tokenize (ss:string list) : token list =
-    case ss of
+    (case ss of
     [] => []
     | tok :: ss2 =>
       if tok = "how" then
@@ -55,7 +55,9 @@ structure Parser = struct
       | "Credits" => Credits
       | "?" => End
       | "is" => Assign
-      | _ => case Int.fromString tok of NONE => Name tok |SOME i => Int i) :: tokenize ss2;
+      | _ =>
+        case Int.fromString tok of NONE => Name tok |SOME i => Int i) :: tokenize ss2)
+    handle NotFound => [];
 
   fun valOf (n : number): int =
     case n of
