@@ -97,4 +97,23 @@ structure Eval = struct
       end
   end
 
+  local
+    val currVals = ref { gold = NONE, silver = NONE, iron = NONE};
+    val currEnv = ref [];
+  in
+    fun run (strs: string list) : string = let
+      val toks = Parser.tokenize strs
+      in
+        case eval toks (!currVals) (!currEnv) of
+        NONE => "Error in evaluation"
+        | SOME (newVals, newEnv, res) =>
+          (currVals := newVals;
+            currEnv := newEnv;
+            case res of
+            NONE => ""
+            | SOME (SumRes (ss, i)) => (ss ^ " is " ^ (Int.toString i))
+            | SOME (Conv (ss, i)) => (ss ^ " is " ^ (Int.toString i) ^ " Credits"))
+        end
+  end
+
 end
