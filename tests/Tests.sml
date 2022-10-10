@@ -1,5 +1,5 @@
 PolyML.make "../Parser";
-PolyML.make "UnitTests";
+PolyML.make "ParserUnitTests";
 
 fun main () =
-  UnitTests.test();
+  ParserUnitTests.test();

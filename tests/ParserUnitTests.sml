@@ -1,4 +1,4 @@
-structure UnitTests = struct
+structure ParserUnitTests = struct
 
   open Parser;
 
