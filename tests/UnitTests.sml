@@ -22,7 +22,19 @@ structure UnitTests = struct
                    tokenize ["C"] = [Num C] andalso
                    tokenize ["D"] = [Num D] andalso
                    tokenize ["M"] = [Num M])
-                   "Parser does not properly constants"
+                   "Tokenizer does not properly read constants"
+    val _ = check
+              (tokenize ["is"] = [Assign] andalso
+               tokenize ["Gold"] = [Gold] andalso
+               tokenize ["Silver"] = [Silver] andalso
+               tokenize ["Iron"] = [Iron] andalso
+               tokenize ["Credits"] = [Credits] andalso
+               tokenize ["glob"] = [Name "glob"] andalso
+               tokenize ["baz"] = [Name "baz"] andalso
+               tokenize ["?"] = [End] andalso
+               tokenize ["how", "much", "is"] = [Sum] andalso
+               tokenize ["how", "many"] = [Convert])
+                "Tokenizer does not recognize all language elements"
     val _ = check (sum [] = 0) "Cannot sum empty list properly to 0";
     val _ = check (sum [I, I] = 2 andalso
                    sum [V, I, I, I] = 8 andalso
