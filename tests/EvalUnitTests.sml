@@ -8,6 +8,8 @@ structure EvalUnitTests = struct
   val cnstXIenv = [("x", I)];
 
   fun test () = let
+    val _ = check (eval [] emptyValuation [] = NONE)
+              "Empty command list should fail evaluation"
     val _ = check (eval [Name "x", Assign, Num I] emptyValuation [] =
                   SOME (emptyValuation, cnstXIenv, NONE))
               "Assignment of variables not properly implemented"
