@@ -18,9 +18,15 @@ structure Eval = struct
       and it returns the result of the current operation
   **)
   fun eval (tks:token list)
-           ({gold = goldOpt, silver = silverOpt, iron = ironOpt}: valuation)
+           (vals: valuation)
            (env:(string * number) list)
            : result =
-    NONE;
+    let val {gold = goldOpt, silver = silverOpt, iron = ironOpt} = vals in
+    case tks of
+    [] => NONE (* empty list fails evaluation *)
+    (** Overwriting on purpose **)
+    | Name x :: Assign :: Num i :: [] => SOME (vals, (x,i) :: env, NONE)
+    | _ => NONE
+    end
 
 end
