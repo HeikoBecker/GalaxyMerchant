@@ -2,11 +2,11 @@ structure Eval = struct
 
   open Parser;
 
-  type valuation = { gold : int option, silver : int option, iron: int option };
+  type valuation = { gold : real option, silver : real option, iron: real option };
 
   datatype value =
     SumRes of string * int (* result of a summation *)
-    | Conv of string * int (* result of a unit conversion *)
+    | Conv of string * real (* result of a unit conversion *)
 
   type result =
     (valuation * (* current mapping from metals to credits *)
@@ -52,7 +52,7 @@ structure Eval = struct
             if tok = Gold orelse tok = Silver orelse tok = Iron then
               (let
               (** ratio for value in credits of 1 unit *)
-                val value = i div (sum numsX)
+                val value = Real.fromInt i / Real.fromInt (sum numsX)
                 val newVals =
                 (* match non-exhaustive, if check before ensures that no other
                    value can occur *)
@@ -81,15 +81,18 @@ structure Eval = struct
           Iron :: End :: [] =>
             (case ironOpt of NONE => NONE
             | SOME ironVal =>
-              SOME (vals, env, SOME (Conv (nameX ^ " Iron", (sum numsX) div ironVal))))
+              SOME (vals, env,
+                  SOME (Conv (nameX ^ " Iron", Real.fromInt (sum numsX) * ironVal))))
           | Silver :: End :: [] =>
             (case silverOpt of NONE => NONE
             | SOME silverVal =>
-              SOME (vals, env, SOME (Conv (nameX ^ " Silver", (sum numsX) div silverVal))))
+              SOME (vals, env,
+                SOME (Conv (nameX ^ " Silver", Real.fromInt (sum numsX) * silverVal))))
           | Gold :: End :: [] =>
             (case goldOpt of NONE => NONE
             | SOME goldVal =>
-              SOME (vals, env, SOME (Conv (nameX ^ " Gold", (sum numsX) div goldVal))))
+              SOME (vals, env,
+                SOME (Conv (nameX ^ " Gold", Real.fromInt (sum numsX) * goldVal))))
           | _ => NONE
           handle IllegalFormat => NONE) (* TODO Print exception *)
           )
@@ -105,14 +108,14 @@ structure Eval = struct
       val toks = Parser.tokenize strs
       in
         case eval toks (!currVals) (!currEnv) of
-        NONE => "Error in evaluation"
+        NONE => "I have no idea what you are talking about"
         | SOME (newVals, newEnv, res) =>
           (currVals := newVals;
             currEnv := newEnv;
             case res of
             NONE => ""
             | SOME (SumRes (ss, i)) => (ss ^ " is " ^ (Int.toString i))
-            | SOME (Conv (ss, i)) => (ss ^ " is " ^ (Int.toString i) ^ " Credits"))
+            | SOME (Conv (ss, i)) => (ss ^ " is " ^ (Real.toString i) ^ " Credits"))
         end
   end
 
