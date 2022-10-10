@@ -13,6 +13,12 @@ structure EvalUnitTests = struct
     val _ = check (eval [Name "x", Assign, Num I] emptyValuation [] =
                   SOME (emptyValuation, cnstXIenv, NONE))
               "Assignment of variables not properly implemented"
+    val _ = check (eval [Name "x", Assign, Num V] emptyValuation cnstXIenv =
+                    SOME (emptyValuation, ("x", V)::cnstXIenv, NONE)
+                  andalso
+                    eval [Sum, Name "x"] emptyValuation (("x", V)::cnstXIenv) =
+                      SOME (emptyValuation, ("x", V)::cnstXIenv, SOME (SumRes ("x", 5)) ))
+              "Assignment does not properly overwrite old values"
     val _ = check (eval [Name "x", Silver, Assign, Name "x", Credits]
                         emptyValuation cnstXIenv =
                     SOME (silverOneVal, cnstXIenv, NONE))
