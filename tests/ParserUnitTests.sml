@@ -1,16 +1,7 @@
-structure UnitTests = struct
+structure ParserUnitTests = struct
 
   open Parser;
-
-  fun check exp msg =
-    (if exp then () else Infra.failure msg)
-    handle e => Infra.failure msg
-
-  (** Needs to be unit to bool for exp to catch exceptions here because of
-      call-by-value semantics **)
-  fun checkfail (exp:unit -> 'a) msg =
-    (exp (); Infra.failure msg)
-    handle e => () (** If an exception is raised we got the expected result **)
+  open TestUtils;
 
   fun test () = let
     val _ = check (tokenize [] = []) "Parser does not support empty list"
@@ -68,7 +59,5 @@ structure UnitTests = struct
                       "I only subtractable from V and X and X only from L and C"
   in ()
   end;
-
-
 
 end
