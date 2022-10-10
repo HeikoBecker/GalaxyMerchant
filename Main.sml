@@ -7,7 +7,7 @@ PolyML.make "Reader";
     fun greet() =
        print ("Welcome to the Galaxy Merchant. Please enter your query\n");
 
-    fun prompt() = print ">"
+    fun prompt() = print "> "
 
     fun evalStep() =
       let
