@@ -60,6 +60,4 @@ structure ParserUnitTests = struct
   in ()
   end;
 
-
-
 end
