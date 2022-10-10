@@ -48,24 +48,22 @@ structure Eval = struct
         (case readNames tks env of NONE => NONE
         | SOME (nameX, numsX, tks2) =>
           (case tks2 of
-          tok :: Assign :: tks3 =>
-            if (tok = Gold orelse tok = Silver orelse tok = Iron) then
-              case readNames tks3 env of NONE => NONE
-              | SOME (nameY, numsY, tks4) =>
-                (let
-                  (** ratio for value in credits of 1 unit *)
-                  val value = (sum numsY) div (sum numsX)
-                  val newVals =
-                    (* match non-exhaustive, if check before ensures that no other
-                      value can occur *)
-                    case tok of
+          tok :: Assign :: Int i :: tks3 =>
+            if tok = Gold orelse tok = Silver orelse tok = Iron then
+              (let
+              (** ratio for value in credits of 1 unit *)
+                val value = i div (sum numsX)
+                val newVals =
+                (* match non-exhaustive, if check before ensures that no other
+                   value can occur *)
+                  case tok of
                     Gold => {gold = SOME value, silver = silverOpt, iron = ironOpt}
                     | Silver => {gold = goldOpt, silver = SOME value , iron = ironOpt}
                     | Iron => {gold = goldOpt, silver = silverOpt, iron = SOME value}
-                in
-                  SOME (newVals, env, NONE)
-                end
-                handle IllegalFormat => NONE) (* TODO print exception *)
+              in
+                SOME (newVals, env, NONE)
+              end
+              handle IllegalFormat => NONE) (* TODO print exception *)
             else NONE
           | _ => NONE))
       | Sum :: tks2 =>

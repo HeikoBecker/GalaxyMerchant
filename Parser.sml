@@ -16,6 +16,7 @@ structure Parser = struct
     | Iron
     | Credits
     | Name of string
+    | Int of int
     | End
     | Sum
     | Convert
@@ -54,7 +55,7 @@ structure Parser = struct
       | "Credits" => Credits
       | "?" => End
       | "is" => Assign
-      | _ => Name tok) :: tokenize ss2;
+      | _ => case Int.fromString tok of NONE => Name tok |SOME i => Int i) :: tokenize ss2;
 
   fun valOf (n : number): int =
     case n of
