@@ -100,23 +100,27 @@ structure Eval = struct
       end
   end
 
+  datatype evalRes = Cont of string | Fail of string | Term;
+
   local
     val currVals = ref { gold = NONE, silver = NONE, iron = NONE};
     val currEnv = ref [];
   in
-    fun run (strs: string list) : string = let
+    fun run (strs: string list) : evalRes = let
       val toks = Parser.tokenize strs
       in
-        case eval toks (!currVals) (!currEnv) of
-        NONE => "I have no idea what you are talking about"
-        | SOME (newVals, newEnv, res) =>
-          (currVals := newVals;
-            currEnv := newEnv;
-            case res of
-            NONE => ""
-            | SOME (SumRes (ss, i)) => (ss ^ " is " ^ (Int.toString i))
-            | SOME (Conv (ss, i)) => (ss ^ " is " ^ (Real.toString i) ^ " Credits"))
-        end
+        if toks = [Quit] then Term
+        else
+          case eval toks (!currVals) (!currEnv) of
+          NONE => Fail "I have no idea what you are talking about"
+          | SOME (newVals, newEnv, res) =>
+            (currVals := newVals;
+              currEnv := newEnv;
+              case res of
+              NONE => Cont ""
+              | SOME (SumRes (ss, i)) => Cont (ss ^ " is " ^ (Int.toString i))
+              | SOME (Conv (ss, i)) => Cont (ss ^ " is " ^ (Real.toString i) ^ " Credits"))
+          end
   end
 
 end

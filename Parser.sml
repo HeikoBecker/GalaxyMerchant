@@ -20,6 +20,7 @@ structure Parser = struct
     | End
     | Sum
     | Convert
+    | Quit
 
   fun consume (elem:''a) (ss:''a list) =
     case ss of [] => raise NotFound
@@ -40,6 +41,7 @@ structure Parser = struct
         else
           let val ss3 = consume "many" ss2
           in Convert :: tokenize ss3 end
+      else if tok = "quit" then [Quit]
       else
       (case tok of
        "I" => Num I

@@ -12,12 +12,20 @@ PolyML.make "Reader";
     fun evalStep() =
       let
         val line = Reader.read()
-        val result = run line
       in
-        print result
+        run line
       end;
+
     fun loop() =
-      (prompt(); evalStep(); print "\n"; loop())
+      let
+        val _ = prompt();
+        val res = evalStep();
+      in
+        case res of
+        Term => print "Thank you.\n"
+        | Cont s => (print (s^"\n"); loop())
+        | Fail s => (print (s^"\n"); loop())
+      end
   in
     fun main () =
       (greet(); loop());
