@@ -1,0 +1,13 @@
+Welcome to the Galaxy Merchant. Please enter your query
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> pish tegj glob glob is 42
+> glob prok Silver is 68.0 Credits
+> glob prok Gold is 57800.0 Credits
+> glob prok Iron is 782.0 Credits
+> Thank you.
