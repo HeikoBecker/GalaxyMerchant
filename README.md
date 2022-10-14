@@ -1,6 +1,9 @@
 # GalaxyMerchant
 
 This project was build using the SML programming language.
+The folder MPS implementation also contains a draft, WIP version of an MPS
+implementation to familiarize with the system.
+Below we focus on the SML implementation.
 
 ## Compilation
 
@@ -9,7 +12,7 @@ You need to install polyml from the official software repositories, which can be
 
     sudo apt install -y polyml libpolyml9 libpolyml-dev polyml-modules
 
-The project contains a build script written in bash that automatically compiles the code when run. It is in 
+The project contains a build script written in bash that automatically compiles the code when run. It is in
 the folder `scripts` and can be run from the top directory of the repository using
 
     ./scripts/build.sh
@@ -21,7 +24,7 @@ The binary can be run using `./galaxyMerchant` and it accepts the inputs describ
 
 The program is run using `./galaxyMerchant` and afterwards an interactive prompt will appear.
 An example input for the program is in  `testcases/example1.txt`. To run the program on
-the test inputs, you can use 
+the test inputs, you can use
 
     ./galaxyMerchant < ./testcases/example1.txt
 
